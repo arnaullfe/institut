@@ -38,7 +38,7 @@ public class View<JDataChooser> extends JFrame {
     public JTable jtTaulaAlumnesTutor,jtTaulaNotesAlum;
     public DefaultTableModel dtModelAlumnesTutor,dtModelTaulaNotesAlum;
     /*<-----------------Inici----------------------->*/
-    public JLabel jlInici;
+    public JLabel jlInici,jlErrorCanviNom;
     public JTextField jtfCanviNomInsti;
     public JButton jbCanviNomInsti;
     /*<-----------------titol----------------------->*/
@@ -79,11 +79,15 @@ public class View<JDataChooser> extends JFrame {
             panell.setVisible(false);
             this.getContentPane().add(panell);
         }
-
         jpTitol = new JPanel();
         jpTitol.setBounds(0,0,this.getWidth(),40);
         jpTitol.setLayout(null);
         this.getContentPane().add(jpTitol);
+        jpCanviarDades = (JPanel) this.getContentPane().getComponent(2);
+        jpNovaMatricula = (JPanel) this.getContentPane().getComponent(3);
+        jpNovaMatricula2 = (JPanel) this.getContentPane().getComponent(4);
+        jpTutorNotes = (JPanel) this.getContentPane().getComponent(5);
+
     }
     private void omplirImageIcon() {
         ImageIcon valid = new ImageIcon("img/icons/valid.png");
@@ -113,6 +117,7 @@ public class View<JDataChooser> extends JFrame {
         menu.add(jmiTutor);
         menuBar.add(menu);
 
+
         jlInstitut = new JLabel("Cirvianum");
         jlInstitut.setBounds(100,0,menuBar.getWidth(),40);
         jlInstitut.setHorizontalAlignment(SwingConstants.CENTER);
@@ -141,9 +146,16 @@ public class View<JDataChooser> extends JFrame {
         jtfCanviNomInsti.setBounds(80,110,this.getWidth()-160,30);
         jpInici.add(jtfCanviNomInsti);
 
+        jlErrorCanviNom = new JLabel("No és pot canviar el nom de l'institut perquè no s'ha introduït un nou nom!");
+        jlErrorCanviNom.setBounds(80,145,this.getWidth()-160,30);
+        jlErrorCanviNom.setForeground(Color.RED);
+        jlErrorCanviNom.setHorizontalAlignment(SwingConstants.CENTER);
+        jlErrorCanviNom.setVisible(false);
+        jpInici.add(jlErrorCanviNom);
+
         jbCanviNomInsti = new JButton();
         jbCanviNomInsti.setText("Canviar");
-        jbCanviNomInsti.setBounds(280,170,this.getWidth()-560,30);
+        jbCanviNomInsti.setBounds(280,175,this.getWidth()-560,30);
         jpInici.add(jbCanviNomInsti);
         jpInici.setVisible(true);
         jpInici.setBackground(Color.LIGHT_GRAY);
@@ -207,5 +219,40 @@ public class View<JDataChooser> extends JFrame {
     }
     private void dissenyTutor(){
         jpTutor = (JPanel) this.getContentPane().getComponent(5);
+        jlAlumnesTutor = new JLabel("Llista d'alumnes (doble click per entrar a les seves notes) :");
+        jlAlumnesTutor. setBounds(0,15,this.getWidth(),30);
+        jlAlumnesTutor.setHorizontalAlignment(SwingConstants.CENTER);
+        jlAlumnesTutor.setFont(cos);
+        jpTutor.add(jlAlumnesTutor);
+
+        dtModelAlumnesTutor = new DefaultTableModel();
+        dtModelAlumnesTutor.addColumn("DNI");
+        dtModelAlumnesTutor.addColumn("Nom");
+        dtModelAlumnesTutor.addColumn("Cognoms");
+        jtTaulaAlumnesTutor = new JTable(dtModelAlumnesTutor);
+        jtTaulaAlumnesTutor.setBounds(20,45,this.getWidth()-40,500);
+        jtTaulaAlumnesTutor.setEnabled(false);
+        jpTutor.add(jtTaulaAlumnesTutor);
+        JScrollPane scrollTaula = new JScrollPane(jtTaulaAlumnesTutor,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollTaula.setBounds(20,45,jtTaulaAlumnesTutor.getWidth(),jtTaulaAlumnesTutor.getHeight());
+        jpTutor.add(scrollTaula);
+    }
+    public void canviPanell(JPanel mostrar){
+        JPanel [] array = {jpInici,jpAdministracio,jpCanviarDades,jpNovaMatricula,jpNovaMatricula2,jpTutor,jpTutorNotes};
+        for(JPanel a : array){
+            if(a!=mostrar){
+                a.setVisible(false);
+            }
+        }
+        mostrar.setVisible(true);
+    }
+
+    public void natejarTextField(JTextField nateja){
+        nateja.setText("");
+    }
+    public void natejarTextField(JTextField [] nateja){
+        for(JTextField a : nateja){
+            a.setText("");
+        }
     }
 }

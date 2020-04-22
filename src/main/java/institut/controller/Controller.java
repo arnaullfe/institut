@@ -23,8 +23,8 @@ public class Controller {
         listeners();
     }
     public void listeners(){
-
         listenerMenuItem();
+        listenerCanviNomInstitut();
     }
 
     public void listenerMenuItem(){
@@ -33,20 +33,13 @@ public class Controller {
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource()==view.jmiHome){
                     view.jlTitol.setText("Inici");
-                    view.jpInici.setVisible(true);
-                    view.jpAdministracio.setVisible(false);
-                    view.jpTutor.setVisible(false);
+                    view.canviPanell(view.jpInici);
                 } else if(e.getSource()==view.jmiAdministracio){
                     view.jlTitol.setText("Administració");
-                    view.jpInici.setVisible(false);
-                    view.jpAdministracio.setVisible(true);
-                    view.jpTutor.setVisible(false);
+                    view.canviPanell(view.jpAdministracio);
                 } else if(e.getSource()==view.jmiTutor){
                     view.jlTitol.setText("Tutor");
-                    view.jpInici.setVisible(false);
-                    view.jpAdministracio.setVisible(false);
-                    view.jpTutor.setVisible(true);
-
+                    view.canviPanell(view.jpTutor);
                 }
             }
         };
@@ -55,5 +48,22 @@ public class Controller {
         view.jmiTutor.addActionListener(listener);
     }
 
+    public void listenerCanviNomInstitut(){
+        ActionListener listener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(view.jtfCanviNomInsti.getText().isEmpty()){
+                    view.jlErrorCanviNom.setVisible(true);
+                } else{
+                    view.jlErrorCanviNom.setVisible(false);
+                    institut.setNomInstitut(view.jtfCanviNomInsti.getText());
+                    view.jlInstitut.setText(institut.getNomInstitut());
+                    view.natejarTextField(view.jtfCanviNomInsti);
+                    JOptionPane.showMessageDialog(view,"S'ha canviat correctament el nom de l'institut!");
+                }
+            }
+        };
+        view.jbCanviNomInsti.addActionListener(listener);
+    }
 
 }
