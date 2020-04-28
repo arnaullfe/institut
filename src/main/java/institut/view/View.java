@@ -235,6 +235,7 @@ public class View<JDataChooser> extends JFrame {
         jbNouDades.setBounds(300,430,150,50);
         Component []components = {jlNovesDadesAlumne,jlNouDni,jtfNouDNI,jlNouNom,jtfNouNom,jlNouCognom,jtfNouCognom, jlNouTel,jtfNouTel,jlNouCorreu,jtfNouCorreu,jlNouPoblació,jtfNouPoblació,jlNouAddress,jtfNouAddress,jlNouNaixament,jdcNouNaix,jbNouDades};
         afegirComponents(jpNovaMatricula,components);
+
     }
 
     public void canviPanell(JPanel mostrar){
