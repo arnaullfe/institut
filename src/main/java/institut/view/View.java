@@ -1,5 +1,7 @@
 package institut.view;
 
+import com.toedter.calendar.JDateChooser;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -28,11 +30,11 @@ public class View<JDataChooser> extends JFrame {
     public JButton jbGuardarCanvis,jbCancelCanvis;
     public JDataChooser jdcCanviNaix;
     /*<-----------------NovaMatricula----------------------->*/
-    public JLabel jlNouDni,jlNouNom,jlNouCognom,jlNouTel,jlNouCorreu,jlNouPoblació,jlNouAddress,jlNuNaixament;
-    public JTextField jtNouDNI,jtNouNom,jtNouCognom,jtNouTel,jtNouCorreu,jtNouPoblació,jtNouAddress;
+    public JLabel jlNovesDadesAlumne,jlNouDni,jlNouNom,jlNouCognom,jlNouTel,jlNouCorreu,jlNouPoblació,jlNouAddress,jlNouNaixament;
+    public JTextField jtfNouDNI,jtfNouNom,jtfNouCognom,jtfNouTel,jtfNouCorreu,jtfNouPoblació,jtfNouAddress;
     public JLabel iconNouDni,iconNouNom,iconNouCognom,iconNouTel,iconNouCorreu,iconNouPoblació,iconNouAddress,iconNouNaixament;
-    public JButton jbNouSeguent,jbFerMatricula;
-    public JDataChooser jdcNouNaix;
+    public JButton jbNouDades,jbFerMatricula;
+    public JDateChooser jdcNouNaix;
     /*<-----------------Tutor----------------------->*/
     public JLabel jlAlumnesTutor,jlAlumneCanviNota;
     public JTable jtTaulaAlumnesTutor,jtTaulaNotesAlum;
@@ -68,6 +70,7 @@ public class View<JDataChooser> extends JFrame {
         dissenyInici();
         dissenyAdministracio();
         dissenyTutor();
+        dissenyNovaMatricula();
         omplirImageIcon();
     }
     public void crearPanells(){
@@ -84,7 +87,6 @@ public class View<JDataChooser> extends JFrame {
         jpTitol.setLayout(null);
         this.getContentPane().add(jpTitol);
         jpCanviarDades = (JPanel) this.getContentPane().getComponent(2);
-        jpNovaMatricula = (JPanel) this.getContentPane().getComponent(3);
         jpNovaMatricula2 = (JPanel) this.getContentPane().getComponent(4);
         jpTutorNotes = (JPanel) this.getContentPane().getComponent(5);
 
@@ -101,15 +103,18 @@ public class View<JDataChooser> extends JFrame {
         menu = new JMenu();
         menu.setBounds(0,0,40,40);
         ImageIcon despl = new ImageIcon("img/icon.png");
-        ImageIcon image = new ImageIcon(despl.getImage().getScaledInstance(40,40,Image.SCALE_SMOOTH));
+        ImageIcon image = new ImageIcon(despl.getImage().getScaledInstance(30,30,Image.SCALE_SMOOTH));
         menu.setIcon(image);
 
-        jmiHome = new JMenuItem("Inici");
-        jmiHome.setName("home");
+        jmiHome = new JMenuItem("Home");
+        ImageIcon home = new ImageIcon("img/home.png");
+        jmiHome.setIcon(new ImageIcon(home.getImage().getScaledInstance(13, 13, Image.SCALE_SMOOTH)));
         jmiAdministracio = new JMenuItem("Administració");
-        jmiAdministracio.setName("Administracio");
+        ImageIcon admin = new ImageIcon("img/folder-open.png");
+        jmiAdministracio.setIcon(new ImageIcon(admin.getImage().getScaledInstance(13, 13, Image.SCALE_SMOOTH)));
         jmiTutor = new JMenuItem("Tutor");
-        jmiTutor.setName("Tutor");
+        ImageIcon tutor = new ImageIcon("img/user-tie.png");
+        jmiTutor.setIcon(new ImageIcon(tutor.getImage().getScaledInstance(13, 13, Image.SCALE_SMOOTH)));
         menu.add(jmiHome);
         menu.addSeparator();
         menu.add(jmiAdministracio);
@@ -117,86 +122,59 @@ public class View<JDataChooser> extends JFrame {
         menu.add(jmiTutor);
         menuBar.add(menu);
 
-
-        jlInstitut = new JLabel("Cirvianum");
-        jlInstitut.setBounds(100,0,menuBar.getWidth(),40);
-        jlInstitut.setHorizontalAlignment(SwingConstants.CENTER);
-        jlInstitut.setFont(titol);
+        jlInstitut = creacioJLabel("Cirvianum",100,0,menuBar.getWidth(),40,SwingConstants.CENTER,titol);
         menuBar.add(jlInstitut);
         this.setJMenuBar(menuBar);
         this.validate();
         this.repaint();
     }
     private void dissenyTitol() {
-        jlTitol = new JLabel("Inici");
-        jlTitol.setBounds(0,0,jpTitol.getWidth(),40);
-        jlTitol.setFont(titol);
-        jlTitol.setHorizontalAlignment(SwingConstants.CENTER);
+        jlTitol= creacioJLabel("Inici",0,0,jpTitol.getWidth(),40,SwingConstants.CENTER,titol);
         jpTitol.add(jlTitol);
     }
 
     private void dissenyInici(){
         jpInici = (JPanel) this.getContentPane().getComponent(0);
-        jlInici = new JLabel("Benvinguts al software sobre el control d'instituts. pots canviar el nom del institut aquí:");
-        jlInici.setBounds(20,60,this.getWidth()-40,40);
-        jlInici.setFont(cos);
-        jpInici.add(jlInici);
+        String text = "Benvinguts al software sobre el control d'instituts. pots canviar el nom del institut aquí:";
+        jlInici = creacioJLabel(text,20,60,this.getWidth()-40,40,-1,cos);
 
         jtfCanviNomInsti = new JTextField();
         jtfCanviNomInsti.setBounds(80,110,this.getWidth()-160,30);
-        jpInici.add(jtfCanviNomInsti);
 
-        jlErrorCanviNom = new JLabel("No és pot canviar el nom de l'institut perquè no s'ha introduït un nou nom!");
-        jlErrorCanviNom.setBounds(80,145,this.getWidth()-160,30);
+        String textError = "No és pot canviar el nom de l'institut perquè no s'ha introduït un nou nom!";
+        jlErrorCanviNom = creacioJLabel(textError,80,145,this.getWidth()-160,30,SwingConstants.CENTER,null);
         jlErrorCanviNom.setForeground(Color.RED);
-        jlErrorCanviNom.setHorizontalAlignment(SwingConstants.CENTER);
         jlErrorCanviNom.setVisible(false);
-        jpInici.add(jlErrorCanviNom);
 
         jbCanviNomInsti = new JButton();
         jbCanviNomInsti.setText("Canviar");
         jbCanviNomInsti.setBounds(280,175,this.getWidth()-560,30);
-        jpInici.add(jbCanviNomInsti);
+        Component array [] = {jlInici,jtfCanviNomInsti,jlErrorCanviNom,jbCanviNomInsti};
+        afegirComponents(jpInici,array);
         jpInici.setVisible(true);
         jpInici.setBackground(Color.LIGHT_GRAY);
     }
 
     private void dissenyAdministracio(){
         jpAdministracio = (JPanel) this.getContentPane().getComponent(1);
-        jlSelAlumMatricula = new JLabel("SELECCIONAR ALUMNE:");
-        jlSelAlumMatricula.setFont(cos);
-        jlSelAlumMatricula.setBounds(30,15,201,30);
-        jlSelAlumMatricula.setHorizontalAlignment(SwingConstants.LEFT);
-        jpAdministracio.add(jlSelAlumMatricula);
+        jlSelAlumMatricula = creacioJLabel("SELECCIONAR ALUMNE:",30,15,201,30,SwingConstants.LEFT,cos);
 
-        jbNovaMatricula = new JButton();
-        jbNovaMatricula.setText("Crear nova Matricula");
+        jbNovaMatricula = new JButton("Crear nova Matricula");
         jbNovaMatricula.setBounds(400,70,230,50);
-        jpAdministracio.add(jbNovaMatricula);
 
-        jbCanviarDadesAlumn = new JButton();
-        jbCanviarDadesAlumn.setText("Canviar dades alumne seleccionat");
+        jbCanviarDadesAlumn = new JButton("Canviar dades alumne seleccionat");
         jbCanviarDadesAlumn.setBounds(400,165,230,50);
-        jpAdministracio.add(jbCanviarDadesAlumn);
 
-        jtfBuscarAlumn = new JTextField();
-        jtfBuscarAlumn.setBounds(30,60,201,30);
+        jtfBuscarAlumn = creacioJTextField(30,60,201,30);
         jtfBuscarAlumn.setHorizontalAlignment(SwingConstants.LEFT);
-        jpAdministracio.add(jtfBuscarAlumn);
 
         modelLlistaAlumn = new DefaultListModel();
         jlLlistaAlumn = new JList(modelLlistaAlumn);
         jlLlistaAlumn.setBounds(30,100,201,150);
-        jpAdministracio.add(jlLlistaAlumn);
         JScrollPane scrollLlista = new JScrollPane(jlLlistaAlumn,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollLlista.setBounds(30,100,jlLlistaAlumn.getWidth(),jlLlistaAlumn.getHeight());
-        jpAdministracio.add(scrollLlista);
 
-        jlMateriesCursades = new JLabel("Materies Matriculades Per L'alumne:");
-        jlMateriesCursades.setBounds(30,270,this.getWidth()-60,30);
-        jlMateriesCursades.setFont(cos);
-        jlMateriesCursades.setHorizontalAlignment(SwingConstants.CENTER);
-        jpAdministracio.add(jlMateriesCursades);
+        jlMateriesCursades = creacioJLabel("Materies Matriculades Per L'alumne:",30,270,this.getWidth()-60,30,SwingConstants.CENTER,cos);
 
         modelTaulamateriesMatriculades = new DefaultTableModel();
         modelTaulamateriesMatriculades.addColumn("Modul");
@@ -206,24 +184,18 @@ public class View<JDataChooser> extends JFrame {
         jtMateries = new JTable(modelTaulamateriesMatriculades);
         jtMateries.setEnabled(false);
         jtMateries.setBounds(30,300,this.getWidth()-60,200);
-        jpAdministracio.add(jtMateries);
         JScrollPane scrolltaula = new JScrollPane(jtMateries,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrolltaula.setBounds(30,300,jtMateries.getWidth(),jtMateries.getHeight());
-        jpAdministracio.add(scrolltaula);
 
-        jbGenerarBulleti = new JButton();
-        jbGenerarBulleti.setText("Generar Bulletí de notes");
+        jbGenerarBulleti = new JButton("Generar Bulletí de notes");
         jbGenerarBulleti.setBounds(200,520,this.getWidth()-400,40);
-        jpAdministracio.add(jbGenerarBulleti);
-
+        Component array [] = {jlSelAlumMatricula,jbNovaMatricula,jbCanviarDadesAlumn,jtfBuscarAlumn,jlLlistaAlumn,scrollLlista,jlMateriesCursades,jtMateries,scrolltaula,jbGenerarBulleti};
+        afegirComponents(jpAdministracio,array);
     }
     private void dissenyTutor(){
         jpTutor = (JPanel) this.getContentPane().getComponent(5);
-        jlAlumnesTutor = new JLabel("Llista d'alumnes (doble click per entrar a les seves notes) :");
-        jlAlumnesTutor. setBounds(0,15,this.getWidth(),30);
-        jlAlumnesTutor.setHorizontalAlignment(SwingConstants.CENTER);
-        jlAlumnesTutor.setFont(cos);
-        jpTutor.add(jlAlumnesTutor);
+        String text = "Llista d'alumnes (doble click per entrar a les seves notes) :";
+        jlAlumnesTutor = creacioJLabel(text,0,15,this.getWidth(),30,SwingConstants.CENTER,cos);
 
         dtModelAlumnesTutor = new DefaultTableModel();
         dtModelAlumnesTutor.addColumn("DNI");
@@ -232,11 +204,39 @@ public class View<JDataChooser> extends JFrame {
         jtTaulaAlumnesTutor = new JTable(dtModelAlumnesTutor);
         jtTaulaAlumnesTutor.setBounds(20,45,this.getWidth()-40,500);
         jtTaulaAlumnesTutor.setEnabled(false);
-        jpTutor.add(jtTaulaAlumnesTutor);
         JScrollPane scrollTaula = new JScrollPane(jtTaulaAlumnesTutor,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollTaula.setBounds(20,45,jtTaulaAlumnesTutor.getWidth(),jtTaulaAlumnesTutor.getHeight());
-        jpTutor.add(scrollTaula);
+        Component array [] = {jlAlumnesTutor,jtTaulaAlumnesTutor,scrollTaula};
+        afegirComponents(jpTutor,array);
     }
+    private  void dissenyNovaMatricula(){
+        jpNovaMatricula = (JPanel) this.getContentPane().getComponent(3);
+        jpNovaMatricula.setBackground(Color.LIGHT_GRAY);
+        //public JLabel jlNouAddress,jlNouNaixament;
+        jlNovesDadesAlumne = creacioJLabel("Dades de l'alumne",20,15,this.getWidth()-40,30,SwingConstants.CENTER,cos);
+        jlNouDni = creacioJLabel("DNI:",175,70,150,30,-1,cos);
+        jtfNouDNI = creacioJTextField(375,70,200,30);
+        jlNouNom = creacioJLabel("Nom: ",175,110,150,30,-1,cos);
+        jtfNouNom = creacioJTextField(375,110,200,30);
+        jlNouCognom = creacioJLabel("Cognoms:",175,150,150,30,-1,cos);
+        jtfNouCognom = creacioJTextField(375,150,200,30);
+        jlNouTel = creacioJLabel("Telèfon: ",175,190,150,30,-1,cos);
+        jtfNouTel = creacioJTextField(375,190,200,30);
+        jlNouCorreu = creacioJLabel("Correu electrònic: ",175,230,150,30,-1,cos);
+        jtfNouCorreu = creacioJTextField(375,230,200,30);
+        jlNouPoblació = creacioJLabel("Població: ",175,270,150,30,-1,cos);
+        jtfNouPoblació = creacioJTextField(375,270,200,30);
+        jlNouAddress = creacioJLabel("Adreça: ",175,310,150,30,-1,cos);
+        jtfNouAddress = creacioJTextField(375,310,200,30);
+        jlNouNaixament = creacioJLabel("Data de naixament:",175,350,300,30,-1,cos);
+        jdcNouNaix = new JDateChooser();
+        jdcNouNaix.setBounds(375,350,200,30);
+        jbNouDades = new JButton("Següent");
+        jbNouDades.setBounds(300,430,150,50);
+        Component []components = {jlNovesDadesAlumne,jlNouDni,jtfNouDNI,jlNouNom,jtfNouNom,jlNouCognom,jtfNouCognom, jlNouTel,jtfNouTel,jlNouCorreu,jtfNouCorreu,jlNouPoblació,jtfNouPoblació,jlNouAddress,jtfNouAddress,jlNouNaixament,jdcNouNaix,jbNouDades};
+        afegirComponents(jpNovaMatricula,components);
+    }
+
     public void canviPanell(JPanel mostrar){
         JPanel [] array = {jpInici,jpAdministracio,jpCanviarDades,jpNovaMatricula,jpNovaMatricula2,jpTutor,jpTutorNotes};
         for(JPanel a : array){
@@ -253,6 +253,27 @@ public class View<JDataChooser> extends JFrame {
     public void natejarTextField(JTextField [] nateja){
         for(JTextField a : nateja){
             a.setText("");
+        }
+    }
+    public JLabel creacioJLabel(String text, int x,int y, int width, int height,int alignment, Font font){
+        JLabel jlabel = new JLabel(text);
+        jlabel.setBounds(x,y,width,height);
+        if(alignment!=-1){
+            jlabel.setHorizontalAlignment(alignment);
+        }
+        if(font!=null){
+            jlabel.setFont(font);
+        }
+        return jlabel;
+    }
+    public JTextField creacioJTextField(int x,int y, int width, int height){
+        JTextField jtf = new JTextField();
+        jtf.setBounds(x,y,width,height);
+        return jtf;
+    }
+    public void afegirComponents(JPanel panell, Component []array){
+        for(Component a : array){
+            panell.add(a);
         }
     }
 }

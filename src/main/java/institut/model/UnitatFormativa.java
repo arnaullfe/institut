@@ -1,6 +1,6 @@
 package institut.model;
 
 public class UnitatFormativa {
-    private String nomUF;
-    private int numUF,horesUF;
+    private String nomUf,idUf;
+    private int numUf,horesUf;
 }

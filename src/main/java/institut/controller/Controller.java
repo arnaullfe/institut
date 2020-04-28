@@ -25,6 +25,7 @@ public class Controller {
     public void listeners(){
         listenerMenuItem();
         listenerCanviNomInstitut();
+        listenerBotonsCanviPanellAdministracio();
     }
 
     public void listenerMenuItem(){
@@ -66,4 +67,18 @@ public class Controller {
         view.jbCanviNomInsti.addActionListener(listener);
     }
 
+    public void listenerBotonsCanviPanellAdministracio(){
+        ActionListener listener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource()==view.jbNovaMatricula){
+                    view.canviPanell(view.jpNovaMatricula);
+                } else if(e.getSource()==view.jbCanviarDadesAlumn){
+                    view.canviPanell(view.jpCanviarDades);
+                }
+            }
+        };
+        view.jbNovaMatricula.addActionListener(listener);
+        view.jbCanviarDadesAlumn.addActionListener(listener);
+    }
 }
